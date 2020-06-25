@@ -27,7 +27,7 @@ We launch the server with:
 
 If one wishes so, he can test the project with:
 
-`jarn test`
+`yarn test`
 
 # Use
 
