@@ -33,7 +33,11 @@ If one wishes so, he can test the project with:
 
 The service can be queried visiting the url:
 
-`https://localhost:8443/&max=MAX_RESULTS&since=2010-01-01&lang=JavaScript`
+`https://localhost:8443/&max=MAX_RESULTS&since=DATE&lang=LANGUAGE`
+
+for example:
+
+`https://localhost:8443/&max=5&since=2010-01-01&lang=JavaScript`
 
 All the parameters are optional. For brevity, the server returns only the name of the projects.
 

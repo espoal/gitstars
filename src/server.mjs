@@ -58,7 +58,7 @@ const start = async () => {
 
       const date = new Date(query.since).toISOString()
 
-      console.log({ date })
+      // console.log({ date })
 
       if (query.lang) elems = coll.find({ language: query.lang, created_at: { $gte: date } }).limit(query.max)
       else elems = coll.find({ created_at: { $gte: date } }).limit(query.max)

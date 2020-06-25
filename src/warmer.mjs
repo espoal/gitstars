@@ -22,7 +22,7 @@ const mongoClient = mongoDB.MongoClient;
       await db.collection(config.collectionName)
         .insertMany(JSON.parse(fs.readFileSync(`cache/pag${i}.json`)).items)
     }
-
+    /*
     await db.collection(config.collectionName).aggregate([
       {
         $addFields: {
@@ -37,8 +37,11 @@ const mongoClient = mongoDB.MongoClient;
 
     ])
 
-    await db.collection(config.collectionName).createIndex('stargazers_count')
-    await db.collection(config.collectionName).createIndex('created_at')
+
+*/
+
+    await db.collection(config.collectionName).createIndex({ stargazers_count: 1 })
+    // await db.collection(config.collectionName).createIndex({ created_at: 1 })
   } catch (err) {
     console.log(err.stack)
   }
