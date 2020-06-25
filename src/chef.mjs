@@ -1,7 +1,14 @@
+/**
+ * The Chef Module is responsible for retrieving 30 * pages results from github and store the results inside a file, for
+ * later consumption.
+ */
+
 import https from 'https'
 import fs from 'fs'
 import { config } from '../config.mjs'
 
+/** The urlBuilder has a small trick in the query (stars > 10) to guarantee that we won't exceed github computation time
+ * and thus have reliable results */
 const urlBuilder = ({ date = config.startDate, page = 1, language = '' }) =>
   `https://api.github.com/search/repositories?q=stars:%3E10+created:%3E${date}&s=stars&type=Repositories&page=${page}&language=${language}`
 

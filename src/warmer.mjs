@@ -1,3 +1,7 @@
+/**
+ * The warmer module is responsible for filling the mongoDB server with the cache created by the chef Module.
+ */
+
 import mongoDB from 'mongodb'
 import fs from 'fs'
 

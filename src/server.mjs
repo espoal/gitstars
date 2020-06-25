@@ -1,3 +1,7 @@
+/**
+ * The Server module is responsible for querying mongoDB and serve the results asynchronously.
+ */
+
 import http2 from 'http2'
 import fs from 'fs'
 import mongoDB from 'mongodb'
@@ -52,7 +56,7 @@ const start = async () => {
 
       let elems
 
-      const date = new Date(query.since)
+      const date = new Date(query.since).toISOString()
 
       console.log({ date })
 
