@@ -1,6 +1,7 @@
 import http2 from 'http2'
 import fs from 'fs'
 import mongoDB from 'mongodb'
+import queryString from 'querystring'
 
 import { config } from '../config.mjs'
 
@@ -25,14 +26,22 @@ const start = async () => {
   server.on('error', (err) => console.error(err))
 
   server.on('stream', async (stream, headers) => {
-    // stream is a Duplex
-    stream.respond({
-      'content-type': 'text/html',
-      ':status': 200
-    })
-    const elem = await coll.findOne()
-    console.log({ elem })
-    stream.end(elem.id)
+    // checking that the query is not malicious
+    const query = queryString.decode(headers[':path'])
+    if (query.max) query.max = parseInt(query?.max)
+    else query.max = 10
+    // self compare exclude NaN
+    // eslint-disable-next-line no-self-compare
+    if (typeof query.max === 'number' && query.max === query.max) {
+      stream.respond({
+        'content-type': 'text/html',
+        ':status': 200
+      })
+      const elems = coll.find({ language: query.language })
+      console.log({ elems })
+      for await (const elem of elems) stream.write(elem.name)
+      stream.end()
+    } else stream.end('error')
   })
 
   server.listen(8443)
