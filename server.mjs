@@ -1,20 +1,42 @@
 import http2 from 'http2'
 import fs from 'fs'
+import mongoDB from 'mongodb'
+
+const mongoClient = mongoDB.MongoClient
 
 const server = http2.createSecureServer({
   key: fs.readFileSync('certs/example.key'),
   cert: fs.readFileSync('certs/example.crt')
 })
 
-server.on('error', (err) => console.error(err))
+const url = 'mongodb://localhost:27017'
+const dbName = 'gitstars'
+const collection = 'gitstars'
 
-server.on('stream', (stream, headers) => {
-  // stream is a Duplex
-  stream.respond({
-    'content-type': 'text/html',
-    ':status': 200
+let coll
+
+const start = async () => {
+  let client
+  try {
+    client = await mongoClient.connect(url, { useUnifiedTopology: true })
+  } catch (err) {
+    console.log({ err })
+  }
+  coll = client.db(dbName).collection(collection)
+
+  server.on('error', (err) => console.error(err))
+
+  server.on('stream', async (stream, headers) => {
+    // stream is a Duplex
+    stream.respond({
+      'content-type': 'text/html',
+      ':status': 200
+    })
+    const elem = await coll.findOne()
+    stream.end(elem.toString())
   })
-  stream.end('<h1>Hello World</h1>')
-})
 
-server.listen(8443)
+  server.listen(8443)
+}
+
+start()
