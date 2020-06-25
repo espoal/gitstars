@@ -35,7 +35,7 @@ The service can be queried visiting the url:
 
 `https://localhost:8443/&max=MAX_RESULTS&since=2010-01-01&lang=JavaScript`
 
-All the parameters are optional.
+All the parameters are optional. For brevity, the server returns only the name of the projects.
 
 # Architecture
 
@@ -45,7 +45,7 @@ The server uses HTTP/2 streams and asynchronous iteration over the queries, to i
 
 We can easily scale out by firing up more instances of the server, and eventually more mongoDB servers.
 
-#Weaknesses
+# Weaknesses
 
 Given more time I would have containerized the application, to guarantee to have the correct version of everything and to automate scaling.
 
