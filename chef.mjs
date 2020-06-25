@@ -6,31 +6,36 @@ const urlBuilder = ({date='2010-01-01',page=1,language=''}) =>
 
 const headers = {'user-agent': 'giststars'}
 
-const getPage = ({date='2010-01-01',page=1,language='any'}) => https.get(urlBuilder({date, page, language}), {headers}, (res) => {
-  let error
-  const { statusCode } = res;
-  if (statusCode !== 200) {
-    error = new Error('Request Failed.\n' +
-      `Status Code: ${statusCode}`)
-  }
+const getPage = ({date='2010-01-01',page=1,language='any'}) =>
+  https.get(urlBuilder({date, page, language}), {headers}, (res) => {
 
-  if (error) {
-    console.error(error.message)
-    // Consume response data to free up memory
-    res.resume()
-    return
-  }
+    let error
+
+    const { statusCode } = res
+
+    if (statusCode !== 200) {
+      error = new Error('Request Failed.\n' +
+        `Status Code: ${statusCode}`)
+    }
+
+    if (error) {
+      console.error(error.message)
+      // Consume response data to free up memory
+      res.resume()
+      return
+    }
 
 
 
-  res.setEncoding('utf8')
-  let rawData = ''
-  res.on('data', (chunk) => { rawData += chunk })
-  res.on('end', () => {
-    //let json = JSON.parse(rawData)
-    //fs.writeFileSync('cache/pag1.json',rawData.items.toString())
-    fs.writeFileSync(`cache/pag${page}.json`,rawData)
-  })
+    res.setEncoding('utf8')
+    let rawData = ''
+    res.on('data', (chunk) => { rawData += chunk })
+    res.on('end', () => {
+      //let json = JSON.parse(rawData)
+      //fs.writeFileSync('cache/pag1.json',rawData.items.toString())
+      fs.writeFileSync(`cache/pag${page}.json`,rawData)
+    })
+
 }).on('error', (e) => {
   console.error(`Got error: ${e.message}`)
 })

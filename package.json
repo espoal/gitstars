@@ -1,8 +1,21 @@
 {
+  "name": "gitstars",
+  "version": "0.0.1",
+  "description": "git stars sorter",
+  "main": "index.js",
+  "author": "alberto.websci@gmail.com",
+  "license": "MIT",
+  "repository": "https://github.com/alberto-esposito/gitstars",
+  "private": false,
   "devDependencies": {
     "standard": "^14.3.4"
   },
   "dependencies": {
     "mongodb": "^3.5.9"
+  },
+  "scripts": {
+    "createCache": "node chef.mjs",
+    "warmCache": "node warmer.mjs",
+    "serve": "node server.mjs"
   }
 }
