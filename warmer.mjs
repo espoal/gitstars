@@ -18,7 +18,8 @@ const collection = 'gitstars';
 
     for (let i = 1; i < pages; i++) {
       await db.collection(collection)
-        .insertMany(JSON.parse(fs.readFileSync(`cache/pag${i}.json`)).items)}
+        .insertMany(JSON.parse(fs.readFileSync(`cache/pag${i}.json`)).items)
+    }
   } catch (err) {
     console.log(err.stack)
   }
