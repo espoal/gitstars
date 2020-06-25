@@ -8,6 +8,7 @@
   "repository": "https://github.com/alberto-esposito/gitstars",
   "private": false,
   "devDependencies": {
+    "jest": "^26.1.0",
     "standard": "^14.3.4"
   },
   "dependencies": {
@@ -17,7 +18,7 @@
     "createCache": "node src/chef.mjs",
     "warmCache": "node src/warmer.mjs",
     "serve": "node src/server.mjs",
-    "test": "standard",
+    "test": "jest",
     "lint": "standard --fix"
   }
 }

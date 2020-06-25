@@ -18,6 +18,23 @@ const mongoClient = mongoDB.MongoClient;
       await db.collection(config.collectionName)
         .insertMany(JSON.parse(fs.readFileSync(`cache/pag${i}.json`)).items)
     }
+
+    await db.collection(config.collectionName).aggregate([
+      {
+        $addFields: {
+          created_at: {
+            $convert: {
+              input: '$created_at',
+              to: 'date'
+            }
+          }
+        }
+      }
+
+    ])
+
+    await db.collection(config.collectionName).createIndex('stargazers_count')
+    await db.collection(config.collectionName).createIndex('created_at')
   } catch (err) {
     console.log(err.stack)
   }
