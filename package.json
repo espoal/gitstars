@@ -14,9 +14,10 @@
     "mongodb": "^3.5.9"
   },
   "scripts": {
-    "createCache": "node chef.mjs",
-    "warmCache": "node warmer.mjs",
-    "serve": "node server.mjs",
+    "createCache": "node src/chef.mjs",
+    "warmCache": "node src/warmer.mjs",
+    "serve": "node src/server.mjs",
+    "test": "standard",
     "lint": "standard --fix"
   }
 }

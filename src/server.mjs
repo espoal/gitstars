@@ -2,27 +2,25 @@ import http2 from 'http2'
 import fs from 'fs'
 import mongoDB from 'mongodb'
 
+import { config } from '../config.mjs'
+
 const mongoClient = mongoDB.MongoClient
 
 const server = http2.createSecureServer({
-  key: fs.readFileSync('certs/example.key'),
-  cert: fs.readFileSync('certs/example.crt')
+  key: fs.readFileSync(config.sslKey),
+  cert: fs.readFileSync(config.sslCrt)
 })
-
-const url = 'mongodb://localhost:27017'
-const dbName = 'gitstars'
-const collection = 'gitstars'
 
 let coll
 
 const start = async () => {
   let client
   try {
-    client = await mongoClient.connect(url, { useUnifiedTopology: true })
+    client = await mongoClient.connect(config.mongoUrl, { useUnifiedTopology: true })
   } catch (err) {
     console.log({ err })
   }
-  coll = client.db(dbName).collection(collection)
+  coll = client.db(config.dbName).collection(config.collectionName)
 
   server.on('error', (err) => console.error(err))
 
@@ -33,7 +31,8 @@ const start = async () => {
       ':status': 200
     })
     const elem = await coll.findOne()
-    stream.end(elem.toString())
+    console.log({ elem })
+    stream.end(elem.id)
   })
 
   server.listen(8443)

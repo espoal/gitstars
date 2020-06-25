@@ -1,23 +1,21 @@
 import mongoDB from 'mongodb'
 import fs from 'fs'
 
-const mongoClient = mongoDB.MongoClient
+import { config } from '../config.mjs'
 
-const url = 'mongodb://localhost:27017'
-const dbName = 'gitstars'
-const collection = 'gitstars';
+const mongoClient = mongoDB.MongoClient;
 
-(async ({ pages = 2 }) => {
+(async ({ pages = config.pages }) => {
   let client
 
   try {
-    client = await mongoClient.connect(url, { useUnifiedTopology: true })
+    client = await mongoClient.connect(config.mongoUrl, { useUnifiedTopology: true })
     console.log('Connected correctly to server')
 
-    const db = client.db(dbName)
+    const db = client.db(config.dbName)
 
     for (let i = 1; i < pages; i++) {
-      await db.collection(collection)
+      await db.collection(config.collectionName)
         .insertMany(JSON.parse(fs.readFileSync(`cache/pag${i}.json`)).items)
     }
   } catch (err) {
@@ -25,5 +23,5 @@ const collection = 'gitstars';
   }
 
   // Close connection
-  client.close()
+  await client.close()
 })({})

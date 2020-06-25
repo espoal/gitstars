@@ -1,12 +1,13 @@
 import https from 'https'
 import fs from 'fs'
+import { config } from '../config.mjs'
 
-const urlBuilder = ({ date = '2010-01-01', page = 1, language = '' }) =>
+const urlBuilder = ({ date = config.startDate, page = 1, language = '' }) =>
   `https://api.github.com/search/repositories?q=stars:%3E10+created:%3E${date}&s=stars&type=Repositories&page=${page}&language=${language}`
 
 const headers = { 'user-agent': 'giststars' }
 
-const getPage = ({ date = '2010-01-01', page = 1, language = 'any' }) =>
+const getPage = ({ date = config.startDate, page = 1, language = 'any' }) =>
   https.get(urlBuilder({ date, page, language }), { headers }, (res) => {
     let error
 
@@ -36,6 +37,6 @@ const getPage = ({ date = '2010-01-01', page = 1, language = 'any' }) =>
     console.error(`Got error: ${e.message}`)
   })
 
-for (let i = 1; i < 3; i++) {
+for (let i = 1; i < config.pages + 1; i++) {
   setTimeout(getPage, 500 * (i - 1), { page: i })
 }
