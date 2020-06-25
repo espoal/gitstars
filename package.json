@@ -17,6 +17,6 @@
     "createCache": "node chef.mjs",
     "warmCache": "node warmer.mjs",
     "serve": "node server.mjs",
-    "lint": "standard"
+    "lint": "standard --fix"
   }
 }
