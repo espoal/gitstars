@@ -37,7 +37,6 @@ const mongoClient = mongoDB.MongoClient;
 
     ])
 
-
 */
 
     await db.collection(config.collectionName).createIndex({ stargazers_count: 1 })

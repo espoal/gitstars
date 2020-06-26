@@ -9,6 +9,7 @@
   "private": false,
   "devDependencies": {
     "jest": "^26.1.0",
+    "jest-environment-node": "^26.1.0",
     "standard": "^14.3.4"
   },
   "dependencies": {
