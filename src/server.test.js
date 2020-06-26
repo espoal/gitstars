@@ -5,7 +5,6 @@
 /* eslint-env jest */
 
 const http2 = require('http2')
-const dns = require('dns')
 const fs = require('fs')
 
 const config = {
@@ -18,27 +17,6 @@ const config = {
   sslKey: 'certs/example.key'
 }
 
-const reqOptions = {
-  agent: undefined,
-  auth: '',
-  createConnection: false,
-  defaultPort: 8000,
-  family: 4,
-  headers: undefined,
-  hostname: 'localhost',
-  insecureHTTPParser: false,
-  localAddress: '127.0.0.1',
-  lookup: dns.lookup,
-  maxHeaderSize: 16384,
-  method: 'GET',
-  path: '/',
-  protocol: 'http:',
-  port: 8000,
-  setHost: true,
-  timeOut: 500,
-  callback: null
-}
-
 test('test certificates', () => {
   const options = {
     key: fs.readFileSync(config.sslKey),
@@ -48,10 +26,38 @@ test('test certificates', () => {
   expect(options).toBeTruthy()
 })
 
-test('check that (pseudo) input sanitization works', () => {
+test('check that (pseudo) input sanitization works', done => {
+  const client = http2.connect('https://localhost:8443', { rejectUnauthorized: false })
 
+  const req = client.request({ ':path': '/&max=hello' }, { endStream: true })
+
+  req.on('response', headers => {
+    expect(headers[':status']).toBe(200)
+    req.on('data', (chunk) => {
+      expect(chunk.toString('UTF-8')).toBe('error')
+    })
+    req.on('end', () => {
+      client.close()
+      done()
+    })
+  })
 })
 
-test('check that the results are correct', () => {
+test('check that results are correct', done => {
+  const client = http2.connect('https://localhost:8443', { rejectUnauthorized: false })
 
+  const req = client.request({ ':path': '/&max=5' }, { endStream: true })
+
+  req.on('response', headers => {
+    expect(headers[':status']).toBe(200)
+    let data = ''
+    req.on('data', (chunk) => {
+      data += chunk.toString('UTF-8')
+    })
+    req.on('end', () => {
+      expect(data).toBe('freeCodeCamp \nvue \nreact \ntensorflow \nawesome \n\n done')
+      client.close()
+      done()
+    })
+  })
 })
